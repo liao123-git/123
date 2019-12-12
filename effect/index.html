@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.0.0.js"></script>
+    <script src="js/Data.js"></script>
+    <script src="js/Main.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-4.0.0.css">
+    <link rel="stylesheet" href="css/css.css">
+    <style>
+
+        .wheels{
+            width:600px;
+            margin-top:15%;
+            padding-left:60px;
+            padding-top:100px;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            z-index: 999;
+            border-top-right-radius: 70%;
+            border-top-left-radius: 45%;
+            border-bottom-left-radius: 25%;
+            border-bottom-right-radius: 15%;
+
+            border-bottom: 18px solid #000;
+            animation: bounce .5s infinite; /* see comments*/
+            background: linear-gradient( 4deg, rgb(27, 29, 29) calc(5%),#aaa, darkgrey calc(50% - 1px),#e4e4e4, lightgrey calc(50% + 1px) );
+            animation-timing-function: cubic-bezier(.5,0.05,1,.5);
+
+        }
+
+
+        .a-wheel{
+            border-radius: 50%;
+            width: 80px;
+            height:80px;
+            border: 30px solid rgb(27, 29, 29);
+            margin-right: 30px;
+            background: linear-gradient(to top right, grey calc(50% - 1px), #aaa, silver calc(50% + 1px) ); /* see comments*/
+            animation: myspin 1s infinite;
+            animation-timing-function: linear;
+            margin-bottom: -10%;
+
+        }
+        .window{
+            position: absolute;
+            width: 350px;
+            height: 60px;
+            top: 12%;
+            left: 30%;
+            border: 1px solid #000;
+            background: linear-gradient(to top, #000 , darkgrey);
+            border-top-right-radius: 70%;
+            border-top-left-radius: 45%;
+            transform: rotate(4deg)
+        }
+
+        @keyframes myspin{
+            from{
+                transform: rotate(0deg);
+            }
+            to{
+                transform: rotate(360deg);
+            }
+        }
+
+
+        @keyframes bounce{
+            from{
+                transform: translate3d(0, 2px, 0);
+            }
+            to{
+                transform: translate3d(0, 5px, 0);
+            }
+        }
+
+        /*
+        Diagonal line code inspired by:
+        https://codepen.io/juicypixels/pen/gPravL?editors=1100
+
+        Bouncing inspo:
+        https://codeburst.io/tutorial-make-a-bouncing-ball-entirely-with-css-1e7e3c853a50
+
+        I'd like to thank God, w3schools, CSS-Tricks and my 3 brain cells who made this possible.
+          Twitter: @just_saph
+          Instagram: @saphcreates
+        */
+
+
+
+    </style>
+</head>
+<body>
+<div class="wheels">
+    <div class="window"></div>
+    <div class="a-wheel"></div>
+    <div class="a-wheel"></div>
+</div>
+<div class="container">
+</div>
+</body>
+</html>
