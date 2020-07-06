@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <script src="jquery-3.2.1.js"></script>
+    <style>
+
+        .time > div {
+            position: relative;
+            width: 100px;
+            height: 20px;
+            color: white;
+        }
+
+        .time > div > div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: cadetblue;
+            overflow: hidden;
+            transition: box-shadow .8s;
+        }
+
+        span {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 125px;
+        }
+
+        .now {
+            z-index: 5;
+        }
+
+        .down span {
+            bottom: 0;
+        }
+
+        .top .now {
+            transform-origin: 100% 102%;
+        }
+
+        .down .next {
+            z-index: 6;
+        }
+
+        .start_animation {
+            animation: second-half .4s linear;
+        }
+
+        .colon span {
+            top: -25px;
+        }
+
+        .shadow {
+            box-shadow: inset 0 30px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty{
+            opacity: 0;
+        }
+
+        @keyframes second-half {
+            from {
+                transform: rotateX(0);
+            }
+            to {
+                transform: rotateX(-78deg);
+            }
+        }
+
+        @keyframes second-all {
+            from {
+                transform: rotateX(102deg);
+            }
+            to {
+                transform: rotateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+
+</div>
+
+<script>
+    class time {
+        constructor(dom, width, height, date = 'second') {
+            this.domClassName = dom;
+            this.dom = $(dom);
+            this.width = width<20?20:width;
+            this.height = height<20?20:height;
+            this.marginLeft = this.width * 0.1;
+            this.marginTop = this.width * 0.05;
+            this.colonTop = this.width * -0.35;
+            this.fontSize = 0;
+            this.date = date;
+            this.prevTimeObj = false;
+            this.init();
+        }
+
+        init() {
+            switch (this.date) {
+                case 'second':
+                    this.date = 2;
+                    break;
+                case 'min':
+                    this.date = 5;
+                    break;
+                case 'hour':
+                    this.date = 8;
+                    break;
+                case 'day':
+                    this.date = 11;
+                    break;
+                case 'month':
+                    this.date = 14;
+                    break;
+                case 'year':
+                    this.date = 19;
+                    break;
+            }
+            this.creatDom();
+            this.style();
+            if(!this.countDown){
+                this.normal();
+            }else{
+                this.count_down();
+            }
+        }
+
+        creatDom() {
+            for (let i = 0; i < this.date; i++) {
+                let className = '';
+                let content = 0;
+                switch (i) {
+                    case 0:
+                        className = 'second';
+                        break;
+                    case 1:
+                        className = 'ten-second';
+                        break;
+                    case 2:
+                        className = 'colon';
+                        content = ":";
+                        break;
+                    case 3:
+                        className = 'min';
+                        break;
+                    case 4:
+                        className = 'ten-min';
+                        break;
+                    case 5:
+                        className = 'colon';
+                        content = ":";
+                        break;
+                    case 6:
+                        className = 'hour';
+                        break;
+                    case 7:
+                        className = 'ten-hour';
+                        break;
+                    case 8:
+                        className = 'empty';
+                        break;
+                    case 9:
+                        className = 'day';
+                        break;
+                    case 10:
+                        className = 'ten-day';
+                        break;
+                    case 11:
+                        className = 'unites';
+                        content = "";
+                        break;
+                    case 12:
+                        className = 'month';
+                        break;
+                    case 13:
+                        className = 'ten-month';
+                        break;
+                    case 14:
+                        className = 'unites';
+                        content = "";
+                        break;
+                    case 15:
+                        className = 'year';
+                        break;
+                    case 16:
+                        className = 'ten-year';
+                        break;
+                    case 17:
+                        className = 'hundred-year';
+                        break;
+                    case 18:
+                        className = 'tenHundred-year';
+                        break;
+                }
+                this.dom.prepend(`<div class="${className} time">
+                                    <div class="top">
+                                        <div class="now">
+                                            <span>${content}</span>
+                                        </div>
+                                    </div>
+                                    <div class="down">
+                                        <div class="now">
+                                            <span>${content}</span>
+                                        </div>
+                                    </div>
+                                </div>`);
+            }
+        }
+
+        style() {
+            this.dom.css({
+                'display': 'flex',
+            });
+            $(this.domClassName + ' .time').css({
+                'margin': '0 ' + this.marginLeft + 'px',
+                'position': 'relative',
+                'perspective-origin': 'center center',
+                'transform-style': 'preserve-3d',
+                'perspective': '300px',
+            });
+            $(this.domClassName + ' .colon span').css('top', this.colonTop + 'px');
+            $(this.domClassName + ' .time > div ').css({
+                'width': this.width,
+                'height': this.height,
+                'margin-top': this.marginTop,
+            });
+            let font = true;
+            let size = this.height * 2;
+            while (font) {
+                $(this.domClassName + ' .time>div>div>span').css('font-size', size + 'px');
+                let height = $(this.domClassName + ' .time>div>div>span').height();
+                size--;
+                if (height <= this.height * 2 + this.marginTop) {
+                    this.fontSize = size;
+                    font = false;
+                    break;
+                }
+            }
+        }
+
+        normal() {
+            let time = Date.parse(new Date());
+            let second = (time / 1000) % 10;
+            let tenSecond = Math.floor(((time / 1000) % 60) / 10);
+            let min = Math.floor((time / 1000 / 60) % 10);
+            let tenMin = Math.floor(((time / 1000 / 60) % 60) / 10);
+            let date = new Date().getHours();
+            let hour = date >= 10 ? Math.floor(date % 10) : date;
+            let tenHour = date >= 10 ? Math.floor(date / 10) : 0;
+            date = new Date().getDate();
+            let day = date >= 10 ? Math.floor(date % 10) : date;
+            let tenDay = date >= 10 ? Math.floor(date / 10) : 0;
+            date = new Date().getMonth()+1;
+            let month = date >= 10 ? Math.floor(date % 10) : date;
+            let tenMonth = date >= 10 ? Math.floor(date / 10) : 0;
+            date = new Date().getFullYear();
+            let year = date >= 10 ? Math.floor(date % 10) : date;
+            let tenYear = date >= 10 ? Math.floor((date % 100)/10) : 0;
+            let hundredYear = date >= 10 ? Math.floor((date % 1000)/100) : 0;
+            let tenHundredYear = date >= 10 ? Math.floor(date/1000) : 0;
+            let timeObj = {
+                'second':second,
+                'ten-second':tenSecond,
+                'min':min,
+                'ten-min':tenMin,
+                'hour':hour,
+                'ten-hour':tenHour,
+                'day':day,
+                'ten-day':tenDay,
+                'month':month,
+                'ten-month':tenMonth,
+                'year':year,
+                'ten-year':tenYear,
+                'hundred-year':hundredYear,
+                'tenHundred-year':tenHundredYear,
+            };
+            /*this.now_start('second', second);*/
+            if(!this.prevTimeObj){
+                for (let i in timeObj){
+                    this.now_start(i, timeObj[i]);
+                }
+            }else{
+                for (let i in timeObj){
+                    if(timeObj[i]!==this.prevTimeObj[i]){
+                        this.now_start(i, timeObj[i]);
+                    }
+                }
+            }
+            this.prevTimeObj = {
+                'second':second,
+                'ten-second':tenSecond,
+                'min':min,
+                'ten-min':tenMin,
+                'hour':hour,
+                'ten-hour':tenHour,
+                'day':day,
+                'ten-day':tenDay,
+                'month':month,
+                'ten-month':tenMonth,
+                'year':year,
+                'ten-year':tenYear,
+                'hundred-year':hundredYear,
+                'tenHundred-year':tenHundredYear,
+            };
+            window.setTimeout(() => {
+                this.normal();
+            }, 1000);
+        }
+
+
+        now_start(className, num) {
+            $(this.domClassName + ' .' + className + ' .top .now').addClass('start_animation');
+            $(this.domClassName + ' .' + className + ' .down .now').addClass('shadow');
+            let next = $(`<div class="next"><span>${num}</span></div>`);
+            $(this.domClassName + ' .' + className + ' .top').prepend(next);
+            $(this.domClassName + ' .time>div>div>span').css('font-size', this.fontSize + 'px');
+            window.setTimeout(() => {
+                $(this.domClassName + ' .' + className + ' .top .now').remove();
+                let next = $(`<div class="next"><span>${num}</span></div>`);
+                $(this.domClassName + ' .' + className + ' .down').append(next);
+                $(this.domClassName + ' .time>div>div>span').css('font-size', this.fontSize + 'px');
+                next.css({
+                    "animation": "second-all .4s linear",
+                    "transform-origin": "0 -2%"
+                });
+                window.setTimeout(() => {
+                    $(this.domClassName + ' .' + className + ' .down .now').remove();
+                    $(this.domClassName + ' .' + className + ' .top .next').removeClass('next').addClass('now');
+                    $(this.domClassName + ' .' + className + ' .down .next').removeClass('next').addClass('now');
+                }, 390);
+            }, 390);
+        }
+    }
+
+    new time('.content', 50, 50,'day',);
+</script>
+</body>
+</html>
